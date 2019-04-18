@@ -1,0 +1,244 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>我的图表测试！</title>
+		<script src="echarts.js"></script>
+	</head>
+	<body>
+		<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+		<h1><center> 3D 图表绘制</h1>
+		<p>
+			<center>
+				X轴坐标：
+				<select id = "names">
+					<!--<option value="空">空</option>-->
+				</select>
+				&nbsp;
+				Y轴坐标：
+				<select id = "others">
+					<!--<option value="空">空</option>-->
+				</select>
+				&nbsp;
+				<button onclick="GetValues()">
+					获取该属性的属性值
+				</button>
+				<select id = "values">
+					<option value="null">null</option>
+				</select>
+		</p>
+		<div id="Light" style="width:60%;height:46.875rem;border:1px solid ">
+		
+		</div>	
+		<script type="text/javascript">
+			var Chart_light = echarts.init(document.getElementById('Light'));
+			var attribute = [];//从json文件中得到的属性类型
+			//var Coordinate = ['X(纬度)','Y(经度)'];
+			var thevalues = [];//x轴属性
+			var othervalues = [];//y轴属性
+			//var X_Name;
+			//var Y_Name;
+			var mc;//记录json文件中的内容
+			let requestURL = '../MyChart.json';
+			//创建一个HTTP请求对象
+			let request = new XMLHttpRequest();
+			//使用open（）打开一个新请求
+			request.open('GET', requestURL);
+			//设置XHR访问JSON格式数据，然后发送请求
+			// request.responseType = 'json';
+			//设置XHR访问text格式数据
+			request.responseType = 'text';
+			request.send();
+			request.onload = function() {
+				//alert("request.onload1");
+			    let MyChartsText = request.response;
+				//alert(superHeroesText);
+			    mc = JSON.parse(MyChartsText);
+				//alert("request.onload3");
+			    // let superHeroes = request.response;
+				var sel = document.getElementById("names");
+				var sel2 = document.getElementById("others");
+				sel.options.length = 0;
+				sel2.options.length = 0;
+				GetHeader();
+			};
+			function GetHeader(){
+				alert("获取json文件信息...");
+				var sel = document.getElementById("names");
+				var sel2 = document.getElementById("others");
+				attribute = mc['Attribute'];
+				//sel.option.remove("空");
+				//sel.option.remove(0);
+				for(let i = 0;i<attribute.length;i++ ){	
+					//var option = new Option(attribute[i],attribute[i]);
+					//用var option出现的问题为只能在对象只能绑定于一个select
+					sel.options.add(new Option(attribute[i],attribute[i]));
+					sel2.options.add(new Option(attribute[i],attribute[i]));
+				}
+			}
+			function GetValues(){
+				thevalues.splice(0,thevalues.length);
+				othervalues.splice(0,othervalues.length);
+				thisrank.splice(0,thisrank.length);
+				let myvalues = mc['Values'];
+				var name = document.getElementById("names").value;
+				var other = document.getElementById("others").value;
+				
+				var sel = document.getElementById("values");
+				sel.options.length = 0;
+				for(var i = 0;i<myvalues.length;i++){
+					var TheValues = myvalues[i];
+					var option = new Option(TheValues[name],i);
+					sel.options.add(option);
+					//alert(TheValues[name] + "," + TheValues[other]);
+					thevalues.push(TheValues[name]);//x轴
+					othervalues.push(TheValues[other]);//y轴
+				}		
+				MyRank();
+				//Chart_light.setOption(option_light);
+				Chart_light.setOption({
+					legend:{
+						data:[other]
+					},
+					xAxis:{
+						//max:thevalues[thevalues.length-1],
+						//min:thevalues[0],
+						min:'dataMin',
+						max:'dataMax',
+						splitLine: {
+							show: true
+						},
+						data: thevalues
+					},
+					dataZoom:[
+						{
+							type:'inside',
+							xAxisIndex:[0],
+							start:70,
+							end:100
+						},
+						{
+							show:true,
+							xAxisIndex:[0],
+							type:'slider',
+							start:70,
+							end:100
+						}
+					],
+					series:[{
+						name:other,
+						data:othervalues
+					}]
+				});
+			}
+			function ForRank(x,y){
+				this.x = x;
+				this.y = y;
+			}
+			var thisrank = [];
+			function MyRank(){
+				for(var i = 0;i<thevalues.length;i++){
+					var obj = new ForRank(thevalues[i],othervalues[i]);
+					thisrank.push(obj);
+				}
+				thisrank.sort(function(a,b){
+					if(a.x === b.x){
+						return a.y - b.y
+					}else{
+						return a.x - b.x
+					}
+				})
+				for(var i = 0;i<thisrank.length;i++){
+					thevalues[i] = thisrank[i].x;
+					othervalues[i] = thisrank[i].y;
+				}
+			}
+			option_light = {
+			    title: {
+			        text: '二维图表数据分析',
+			        subtext: '气象数据分析'
+			    },
+			    tooltip: {
+			        trigger: 'axis'
+			    },
+			    legend: {
+			        data:['亮度']
+			    },
+			    toolbox: {
+			        show: true,
+			        feature: {
+			            dataZoom: {
+			                yAxisIndex: 'none'
+			            },
+			            dataView: {readOnly: false},
+			            magicType: {type: ['line', 'bar']},
+			            restore: {},
+			            saveAsImage: {}
+			        }
+			    },
+			    xAxis:  {
+			        type: 'category',
+			        boundaryGap: false,
+			        data: thevalues
+			    },
+			    yAxis: {
+			        type: 'value',
+			        axisLabel: {
+			            formatter: '{value} '
+			        }
+			    },
+			    series: [
+			        {
+			            name:document.getElementById("others").value,
+			            type:'line',
+			            data:othervalues,
+			            smooth:true,
+			            markPoint: {
+			                data: [
+			                    {type: 'max', name: '最大值'},
+			                    {type: 'min', name: '最小值'},
+			
+			                ]
+			            },
+			            markLine: {
+			                data: [
+			                    {type: 'average', name: '平均值'},
+			                    [{
+			                        symbol: 'none',
+			                        x: '90%',
+			                        yAxis: 'max'
+			                    }, {
+			                        symbol: 'circle',
+			                        label: {
+			                            normal: {
+			                                position: 'start',
+			                                formatter: '最大值'
+			                            }
+			                        },
+			                        type: 'max',
+			                        name: '最高点'
+			                    }],
+			                    [{
+			                        symbol: 'none',
+			                        x: '90%',
+			                        yAxis: 'min'
+			                    }, {
+			                        symbol: 'circle',
+			                        label: {
+			                            normal: {
+			                                position: 'start',
+			                                formatter: '最小值'
+			                            }
+			                        },
+			                        type: 'min',
+			                        name: '最低点'
+			                    }]
+			                ]
+			            }
+			        }
+			    ]
+			};
+			Chart_light.setOption(option_light);
+		</script>
+	</body>
+</html>

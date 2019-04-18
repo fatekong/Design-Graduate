@@ -1,0 +1,711 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{99AAE8A9-E2B4-4FA2-B98C-6688ABCD1A1E}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Demo</RootNamespace>
+    <AssemblyName>Demo</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DotSpatial.Controls, Version=1.9.0.0, Culture=neutral, PublicKeyToken=4d9e49339a7d240c, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotSpatial.Controls.1.9\lib\net40-Client\DotSpatial.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Data, Version=1.9.0.0, Culture=neutral, PublicKeyToken=c29dbf30e059ca9d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\毕不了业了\DotSpatial\DotSpatialData-master\DotSpatial 1.9\DotSpatial.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Data.Forms, Version=1.9.0.0, Culture=neutral, PublicKeyToken=53ab5a198378d4c1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\毕不了业了\DotSpatial\DotSpatialData-master\DotSpatial 1.9\DotSpatial.Data.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Extensions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=4d9e49339a7d240c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\毕不了业了\DotSpatial\DotSpatialData-master\DotSpatial 1.9\DotSpatial.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Modeling.Forms, Version=1.9.0.0, Culture=neutral, PublicKeyToken=712bef29a31a9354, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\毕不了业了\DotSpatial\DotSpatialData-master\DotSpatial 1.9\DotSpatial.Modeling.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Mono, Version=1.9.0.0, Culture=neutral, PublicKeyToken=425ba4de41127026, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\毕不了业了\DotSpatial\DotSpatialData-master\DotSpatial 1.9\DotSpatial.Mono.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Projections, Version=2.0.0.0, Culture=neutral, PublicKeyToken=272632bddd08a38b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\毕不了业了\DotSpatial\DotSpatialData-master\DotSpatial 1.9\DotSpatial.Projections.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Serialization, Version=2.0.0.0, Culture=neutral, PublicKeyToken=441f200f827611e7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\毕不了业了\DotSpatial\DotSpatialData-master\DotSpatial 1.9\DotSpatial.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Symbology, Version=1.9.0.0, Culture=neutral, PublicKeyToken=6178c08da7998387, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\毕不了业了\DotSpatial\DotSpatialData-master\DotSpatial 1.9\DotSpatial.Symbology.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Symbology.Forms, Version=1.9.0.0, Culture=neutral, PublicKeyToken=0544cdeefb662382, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\毕不了业了\DotSpatial\DotSpatialData-master\DotSpatial 1.9\DotSpatial.Symbology.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Topology, Version=1.9.0.0, Culture=neutral, PublicKeyToken=a66b5e9434ca3671, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\毕不了业了\DotSpatial\DotSpatialData-master\DotSpatial 1.9\DotSpatial.Topology.dll</HintPath>
+    </Reference>
+    <Reference Include="MathNet.Numerics, Version=4.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MathNet.Numerics.4.7.0\lib\net40\MathNet.Numerics.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web.DataVisualization" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Attribute.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Attribute.Designer.cs">
+      <DependentUpon>Attribute.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Charts_2D.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Charts_2D.Designer.cs">
+      <DependentUpon>Charts_2D.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Charts_3D.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Charts_3D.Designer.cs">
+      <DependentUpon>Charts_3D.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ISOLinePackage\Circle.cs" />
+    <Compile Include="CSVFile.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CSVFile.Designer.cs">
+      <DependentUpon>CSVFile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CSVFileHelp.cs" />
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="IDW.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="IDW.Designer.cs">
+      <DependentUpon>IDW.cs</DependentUpon>
+    </Compile>
+    <Compile Include="IDWPackage\InverseDistanceWeight.cs" />
+    <Compile Include="IsoLine.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="IsoLine.Designer.cs">
+      <DependentUpon>IsoLine.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ISOLinePackage\CreateIsoLine.cs" />
+    <Compile Include="ISOLinePackage\Delaunay.cs" />
+    <Compile Include="ISOLinePackage\Edges.cs" />
+    <Compile Include="ISOLinePackage\PolishLine.cs" />
+    <Compile Include="ISOLinePackage\QuickSort.cs" />
+    <Compile Include="ISOLinePackage\Tin_Point.cs" />
+    <Compile Include="ISOLinePackage\Trace.cs" />
+    <Compile Include="ISOLinePackage\Triangle.cs" />
+    <Compile Include="MyKDTree\EnumDivisionType.cs" />
+    <Compile Include="MyKDTree\KDTree.cs" />
+    <Compile Include="MyKDTree\KDTreeNode.cs" />
+    <Compile Include="MyKDTree\KDTreeNodeCollection.cs" />
+    <Compile Include="MyKDTree\KD_Point.cs" />
+    <Compile Include="MyKDTree\LinkListStack.cs" />
+    <Compile Include="Kriging.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Kriging.Designer.cs">
+      <DependentUpon>Kriging.cs</DependentUpon>
+    </Compile>
+    <Compile Include="KrigingPackage\AltitudePoint.cs" />
+    <Compile Include="KrigingPackage\ExpModel.cs" />
+    <Compile Include="KrigingPackage\ForRasterData.cs" />
+    <Compile Include="KrigingPackage\GaussNewtonSolver.cs" />
+    <Compile Include="KrigingPackage\KrigingAlgorithm.cs" />
+    <Compile Include="KrigingPackage\IModel.cs" />
+    <Compile Include="KrigingPackage\RegressionPoint.cs" />
+    <Compile Include="KrigingPackage\Semivariogram.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="KrigingPackage\Semivariogram.Designer.cs">
+      <DependentUpon>Semivariogram.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Measure.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Measure.Designer.cs">
+      <DependentUpon>Measure.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="MyProgressBar.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MyProgressBar.Designer.cs">
+      <DependentUpon>MyProgressBar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RasterLinePackage\CreateRasterLine.cs" />
+    <Compile Include="RasterLinePackage\Polish.cs" />
+    <Compile Include="RasterLinePackage\RasterLine.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RasterLinePackage\RasterLine.Designer.cs">
+      <DependentUpon>RasterLine.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ShapeOption.cs" />
+    <Compile Include="Tabulate\StoreData.cs" />
+    <Compile Include="TIN.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TIN.Designer.cs">
+      <DependentUpon>TIN.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ZoomToCoordinatesDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ZoomToCoordinatesDialog.Designer.cs">
+      <DependentUpon>ZoomToCoordinatesDialog.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Attribute.resx">
+      <DependentUpon>Attribute.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Charts_2D.resx">
+      <DependentUpon>Charts_2D.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Charts_3D.resx">
+      <DependentUpon>Charts_3D.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CSVFile.resx">
+      <DependentUpon>CSVFile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="IDW.resx">
+      <DependentUpon>IDW.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="IsoLine.resx">
+      <DependentUpon>IsoLine.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Kriging.resx">
+      <DependentUpon>Kriging.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="KrigingPackage\Semivariogram.resx">
+      <DependentUpon>Semivariogram.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Measure.resx">
+      <DependentUpon>Measure.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MyProgressBar.resx">
+      <DependentUpon>MyProgressBar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="RasterLinePackage\RasterLine.resx">
+      <DependentUpon>RasterLine.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TIN.resx">
+      <DependentUpon>TIN.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ZoomToCoordinatesDialog.resx">
+      <DependentUpon>ZoomToCoordinatesDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="app.manifest">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <None Include="Resources\MapWindow.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AddLayer.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AddLayer1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AddWebLayer.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AddWebLayer.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Angle.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Apple.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Area.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Button.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\calculator.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Caution.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\CheckBox.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Checked.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Color.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\color_scheme.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Combo.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Copy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cursor_arrow_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cursor_arrow_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cursorHand.cur" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cursorSelect.cur" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cursorZoomIn.cur" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cursorZoomIn1.cur" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cursorZoomOut.cur" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cursorZoomOut1.cur" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\deselect_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\deselect_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Dice.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\disk_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\disk_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\document_empty_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\document_empty_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\DotSpatialGlobe.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\DotSpatialGlobe.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\DotSpatialGlobeSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\down.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\DropDown.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Error.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\file_close.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\file_new.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\file_saveas.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\FileLine.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\FilePoint.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\FilePolygon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\folder_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\folder_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\FolderOpen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Hammer.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\HammerSmall.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\HammerSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\hand_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\hand_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\help.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\info_rhombus_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\info_rhombus_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\information.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Label.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Label.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\layer_add.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\layer_add_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\layer_add_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\layer_remove_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\layer_remove_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\layer_save_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\layer_save_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Layers.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\layout_delete_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\layout_delete_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\layout_zoom_full_extent.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\layout_zoom_in.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\layout_zoom_out.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Legend.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Line.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LinkData.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\map.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\measure_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\measure_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mnuLayerClear.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\NewModel.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\NewModel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\NewShape.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\NewShapefile.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\NorthArrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Nud.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\PageSetup.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Pan.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\PanMap.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\printer.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\printer_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\printer_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\printer_icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Rectangle.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\RunModel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\save.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\save_as_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\save_as_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ScaleBar.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\select.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\select_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\select_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\select_all.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\select_none.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Separator.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SpatialStatusStrip.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SpatialToolStrip.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\table_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\table_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\table_edit.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\table_edit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\text.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\TextBox.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Unchecked.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\up.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\valid.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\zoom_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\zoom_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\zoom_coordinate_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\zoom_coordinate_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\zoom_extend_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\zoom_extend_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\zoom_full_extent.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\zoom_in.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\zoom_in_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\zoom_in_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\zoom_layer_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\zoom_layer_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\zoom_out.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\zoom_out_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\zoom_out_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\zoom_selection_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\zoom_selection_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\zoom_to_next.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\zoom_to_next_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\zoom_to_previous.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\zoom_to_previous_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ZoomFullMap.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ZoomFullView.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ZoomInMap.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ZoomOutMap.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\..\..\毕不了业了\DotSpatial\DotSpatialData-master\DotSpatial 1.9\DotSpatial.Data.dll" />
+    <Analyzer Include="..\..\..\毕不了业了\DotSpatial\DotSpatialData-master\DotSpatial 1.9\DotSpatial.Data.Forms.dll" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

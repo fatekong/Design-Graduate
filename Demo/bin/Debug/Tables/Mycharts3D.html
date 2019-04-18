@@ -1,0 +1,306 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>3D图表</title>
+		<script src="echarts.js"></script>
+		<script src="echarts-gl.js"></script>
+	</head>
+	<body>
+		<h1><center> 3D 图表绘制</h1>
+		<p><center>X坐标选择：
+			<select id="XCoordinate">
+				<option value="空">空</option>
+			</select>
+			&nbsp;
+			Y坐标选择：
+			<select id="YCoordinate">
+				<option value="空">空</option>
+			</select>
+			&nbsp;
+			Z值选择：
+			<select id="values">
+				<option value="null">null</option>
+			</select>
+			&nbsp;
+			图表形式选择：
+			<select id="charttype">
+				<option value="bar3D">柱形图</option>
+				<option value="scatter3D">散点图</option>
+				<option value="line3D">折线图</option>
+			</select>
+			&nbsp;
+			<button onclick="GetValues()">
+				绘图
+			</button>
+			&nbsp;
+		</p>
+		<div id="Scatter3D" style="width:60%;height:46.875rem;border:1px solid "></div>
+		<script type="text/javascript">
+			var Chart3D = echarts.init(document.getElementById('Scatter3D'));
+			var mydataset = [];
+			var attribute = []; //从json文件中得到的属性类型
+			var mc; //记录json文件中的内容
+			let requestURL = '../MyChart3D.json';
+			//创建一个HTTP请求对象
+			let request = new XMLHttpRequest();
+			//使用open（）打开一个新请求
+			request.open('GET', requestURL);
+			//设置XHR访问JSON格式数据，然后发送请求
+			// request.responseType = 'json';
+			//设置XHR访问text格式数据
+			request.responseType = 'text';
+			request.send();
+			request.onload = function() {
+				//alert("request.onload1");
+				let MyChartsText = request.response;
+				//alert(superHeroesText);
+				mc = JSON.parse(MyChartsText);
+				//alert("request.onload3");
+				// let superHeroes = request.response;
+				var sel = document.getElementById("XCoordinate");
+				var sel2 = document.getElementById("YCoordinate");
+				var sel3 = document.getElementById("values");
+				sel.options.length = 0;
+				sel2.options.length = 0;
+				sel3.options.length = 0;
+				GetHeader();
+			};
+
+			function GetHeader() {
+				alert("gethead!");
+				var sel = document.getElementById("XCoordinate");
+				var sel2 = document.getElementById("YCoordinate");
+				var sel3 = document.getElementById("values");
+				attribute = mc['Attribute'];
+				//sel.option.remove("空");
+				//sel.option.remove(0);
+				for (let i = 0; i < attribute.length; i++) {
+					//var option = new Option(attribute[i],attribute[i]);
+					//用var option出现的问题为只能在对象只能绑定于一个select
+					sel.options.add(new Option(attribute[i], attribute[i]));
+					sel2.options.add(new Option(attribute[i], attribute[i]));
+					sel3.options.add(new Option(attribute[i], attribute[i]));
+				}
+				//mydataset.push(attribute);
+			}
+			
+			/*function MyRank(myvalues,Name){
+				//alert(Name);
+				var r = [];
+				for(var i = 0 ;i<myvalues.length;i++){
+					r.push(myvalues[i]);
+				}
+				r.sort(function(a,b){
+					return a[Name] - b[Name];
+				})
+				return r;
+			}
+			
+			function MyRankForY(myvalues,Name){
+				//alert(Name);
+				var r = [];
+				for(var i = 0 ;i<myvalues.length;i++){
+					var inner = myvalues[i];
+					r.push(inner[Name]);
+				}
+				r.sort(function(a,b){
+					return a - b;
+				})
+				return r;
+			}*/
+			
+			function GetValues() {
+				//thevalues.splice(0, thevalues.length);
+				//othervalues.splice(0, othervalues.length);
+				//thisrank.splice(0, thisrank.length);
+				//alert("getvalues");
+				let myvalues = mc['Values'];
+				var XName = document.getElementById("XCoordinate").value;
+				var YName = document.getElementById("YCoordinate").value;
+				var sel = document.getElementById("values").value;
+				var ChartType = document.getElementById("charttype").value;
+				mydataset.push([XName,YName,sel]);
+				//myvalues = MyRank(myvalues,XName);
+				//var ysort = MyRankForY(myvalues,YName);
+				var XMin;
+				var XMax;
+				var YMin;
+				var YMax;
+				var ZMax;
+				var ZMin;
+				//sel.options.length = 0;
+				//alert(name + "," + other);
+				for (var i = 0; i < myvalues.length; i++) {
+					//alert("continue!");
+					var TheValues = myvalues[i];
+					var p = [];
+					/*for (var j = 0; j < attribute.length; j++) {
+						p.push(TheValues[attribute[j]]);
+					}*/
+					if(i == 0){
+						XMin = XMax= TheValues[XName];
+						YMin = YMax= TheValues[YName];
+						ZMin = ZMax = TheValues[sel];
+					}
+					else{
+						if(XMin > TheValues[XName]){
+							XMin = TheValues[XName];
+						}
+						if(XMax < TheValues[XName]){
+							XMax = TheValues[XName];
+						}
+						if(YMin > TheValues[YName]){
+							YMin = TheValues[YName];
+						}
+						if(YMax < TheValues[YName]){
+							YMax = TheValues[YName];
+						}
+						if(ZMin > TheValues[sel]){
+							ZMin = TheValues[sel];
+						}
+						if(ZMax < TheValues[sel]){
+							ZMax = TheValues[sel];
+						}
+					}
+					//alert(ZMax);
+					p.push(parseFloat(TheValues[XName]));
+					p.push(parseFloat(TheValues[YName]));
+					p.push(TheValues[sel]);
+					mydataset.push(p);	
+				}
+				//alert(XName + "," + YName + "," + sel);
+				var Space_X = XMax - XMin;
+				var Space_Y = YMax - YMin;
+				var Space_Z = ZMax - ZMin;
+				/*for (var i = ysort.length-1; i >= 0; i--){
+					if(ZMin>0){
+						mydataset.unshift([XMin,ysort[i],0]);
+					}
+					else{
+						mydataset.unshift([XMin,ysort[i],Zmin-ZMin]);
+					}
+				}
+				mydataset.unshift([XName,YName,sel]);*/
+				//mydataset.unshift([XName,YName,sel]);
+				alert(XName + "," + YName + "," + sel);
+				Chart3D.setOption({
+					xAxis3D: {
+						// 因为 x 轴和 y 轴都是类目数据，所以需要设置 type: 'category' 保证正确显示数据。
+						min:parseFloat(XMin) - Space_X * 0.2,
+						max:parseFloat(XMax) + Space_X * 0.2
+					},
+					yAxis3D: {
+						min:parseFloat(YMin) - Space_Y * 0.2,
+						max:parseFloat(YMax) + Space_Y * 0.2
+					},
+					visualMap:{
+						type:'continuous',
+						calculable:true,
+						text:['High','Low'],
+						symbolSize: 3,
+						max:parseFloat(ZMax) + Space_Z * 0.2,
+						min:parseFloat(ZMin) - Space_Z * 0.2,
+						inRange: {
+							color: ['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43',
+								'#d73027', '#a50026'
+							]
+						}
+					},
+					dataset: {
+						dimension:[
+							XName,
+							YName,
+							sel
+						],
+						source: mydataset
+					},
+					series: [{
+						name: sel,
+						type: ChartType,
+						data: mydataset,
+						symbolSize: 3,
+						/*data: thedataset.map(function (item) {
+							return {
+								value: [item[0], item[1], item[2]]
+							}
+						}),
+						label: {
+							normal: {
+								show: true
+							}
+						},*/
+						shading: 'lambert',
+						encode: {
+							// 维度的名字默认就是表头的属性名
+							x: XName,
+							y: YName,
+							z: sel,
+							tooltip: [0, 1, 2]
+						},
+						//data:mydata
+					}]
+				});
+			}
+			option_3D = {
+				grid3D: {
+					viewControl: {
+						// 使用正交投影。
+						projection: 'orthographic'
+					}
+				},
+				xAxis3D: {
+					// 因为 x 轴和 y 轴都是类目数据，所以需要设置 type: 'category' 保证正确显示数据。
+					type: 'value'
+				},
+				yAxis3D: {
+					type: 'value'
+					//type: 'value'
+				},
+				zAxis3D: {
+					type: 'value'
+				},
+				toolbox: {
+				    show: true,
+				    feature: {
+				        dataZoom: {
+				            yAxisIndex: 'none'
+				        },
+				        dataView: {readOnly: false},
+				        magicType: {type: ['scatter3D', 'bar3D']},
+				        restore: {},
+				        saveAsImage: {}
+				    }
+				},
+				visualMap: {
+					calculable: true,
+					max: 100,
+					// 维度的名字默认就是表头的属性名
+					inRange: {
+						color: ['#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf', '#fee090', '#fdae61', '#f46d43',
+							'#d73027', '#a50026'
+						]
+					}
+				},
+				dataset: {
+					source: mydataset
+				},
+				series: [{
+					type: 'bar3D',
+					symbolSize: 5,
+					/*encode: {
+						// 维度的名字默认就是表头的属性名
+						x: 'X',
+						y: 'Y',
+						z: 'Y01',
+						//tooltip: [0, 1, 2, 3, 4]
+					},*/
+					itemStyle: {
+						opacity: 0.8
+					},
+				}]
+			}
+			Chart3D.setOption(option_3D);
+		</script>
+	</body>
+</html>
