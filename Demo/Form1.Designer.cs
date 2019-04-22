@@ -63,7 +63,6 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.lToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadCSVFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.loadNetCDFFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.shapeFileOptionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pointToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.creatPointFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -301,8 +300,7 @@
             // lToolStripMenuItem
             // 
             this.lToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.loadCSVFileToolStripMenuItem,
-            this.loadNetCDFFileToolStripMenuItem});
+            this.loadCSVFileToolStripMenuItem});
             this.lToolStripMenuItem.Name = "lToolStripMenuItem";
             this.lToolStripMenuItem.Size = new System.Drawing.Size(125, 27);
             this.lToolStripMenuItem.Text = "My Extensions";
@@ -311,16 +309,9 @@
             // 
             this.loadCSVFileToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("loadCSVFileToolStripMenuItem.Image")));
             this.loadCSVFileToolStripMenuItem.Name = "loadCSVFileToolStripMenuItem";
-            this.loadCSVFileToolStripMenuItem.Size = new System.Drawing.Size(209, 26);
+            this.loadCSVFileToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
             this.loadCSVFileToolStripMenuItem.Text = "Load CSV File";
             this.loadCSVFileToolStripMenuItem.Click += new System.EventHandler(this.loadCSVFileToolStripMenuItem_Click_1);
-            // 
-            // loadNetCDFFileToolStripMenuItem
-            // 
-            this.loadNetCDFFileToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("loadNetCDFFileToolStripMenuItem.Image")));
-            this.loadNetCDFFileToolStripMenuItem.Name = "loadNetCDFFileToolStripMenuItem";
-            this.loadNetCDFFileToolStripMenuItem.Size = new System.Drawing.Size(209, 26);
-            this.loadNetCDFFileToolStripMenuItem.Text = "Load NetCDF File";
             // 
             // shapeFileOptionToolStripMenuItem
             // 
@@ -438,6 +429,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.spatialDockManager1);
             this.Controls.Add(this.toolStripContainer1);
@@ -485,7 +477,6 @@
         private DotSpatial.Controls.Map map1;
         private System.Windows.Forms.TreeView ToolManager1;
         private System.Windows.Forms.ToolStripMenuItem loadCSVFileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem loadNetCDFFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem shapeFileOptionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pointToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem creatPointFileToolStripMenuItem;

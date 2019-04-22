@@ -137,10 +137,12 @@ namespace Demo.KrigingPackage
             List<Vector<double>> solverIterations = new List<Vector<double>>();
             double[] x = new double[calPoints.Count];
             double[] y = new double[calPoints.Count];
+            Console.WriteLine("calPoints Count: " + calPoints.Count);
             for(int n = 0; n < calPoints.Count; n++)
             {
                 x[n] = calPoints[n].distance/1000;
                 y[n] = calPoints[n].semivariogram;
+                Console.WriteLine("x: " + x[n] + " , y: " + y[n]);
             }
             Vector<double> dataX = new DenseVector(x);
             Vector<double> dataY = new DenseVector(y);

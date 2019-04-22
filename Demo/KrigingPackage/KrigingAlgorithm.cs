@@ -76,7 +76,7 @@ namespace Demo.KrigingPackage
                     for (int i = 0; i < input.Features.Count; i++)
                     {
                         var featurePt = input.Features[i];
-                        points.Add(new AltitudePoint(featurePt.BasicGeometry.Coordinates[0].X, featurePt.BasicGeometry.Coordinates[0].Y, (double)featurePt.DataRow[zField]));
+                        points.Add(new AltitudePoint(featurePt.BasicGeometry.Coordinates[0].X, featurePt.BasicGeometry.Coordinates[0].Y, Convert.ToDouble(featurePt.DataRow[zField])));
                     }
                     ForRasterData forRasterData = new ForRasterData(points);
                     if (!forRasterData.IsPointsOK())

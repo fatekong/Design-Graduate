@@ -60,7 +60,7 @@ namespace Demo.KrigingPackage
                     dataX[j],
                     parameters,
                     ref gradient);
-                Console.WriteLine("gradient0: " + gradient[0] + " , gradient1: " + gradient[1]);
+                //Console.WriteLine("gradient0: " + gradient[0] + " , gradient1: " + gradient[1]);
                 jacobian.SetRow(j, gradient);
             }
         }
