@@ -120,6 +120,7 @@
 				var YName = document.getElementById("YCoordinate").value;
 				var sel = document.getElementById("values").value;
 				var ChartType = document.getElementById("charttype").value;
+				mydataset.length = 0;
 				mydataset.push([XName,YName,sel]);
 				//myvalues = MyRank(myvalues,XName);
 				//var ysort = MyRankForY(myvalues,YName);
@@ -187,18 +188,20 @@
 				Chart3D.setOption({
 					xAxis3D: {
 						// 因为 x 轴和 y 轴都是类目数据，所以需要设置 type: 'category' 保证正确显示数据。
-						min:parseFloat(XMin) - Space_X * 0.2,
-						max:parseFloat(XMax) + Space_X * 0.2
+						//min:parseFloat(XMin) - Space_X * 0.2,
+						//max:parseFloat(XMax) + Space_X * 0.2
+						scale:true,
 					},
 					yAxis3D: {
-						min:parseFloat(YMin) - Space_Y * 0.2,
-						max:parseFloat(YMax) + Space_Y * 0.2
+						//min:parseFloat(YMin) - Space_Y * 0.2,
+						//max:parseFloat(YMax) + Space_Y * 0.2
+						scale:true,
 					},
 					visualMap:{
 						type:'continuous',
 						calculable:true,
 						text:['High','Low'],
-						symbolSize: 3,
+						//symbolSize: 3,
 						max:parseFloat(ZMax) + Space_Z * 0.2,
 						min:parseFloat(ZMin) - Space_Z * 0.2,
 						inRange: {
@@ -219,7 +222,7 @@
 						name: sel,
 						type: ChartType,
 						data: mydataset,
-						symbolSize: 3,
+						symbolSize: 10,
 						/*data: thedataset.map(function (item) {
 							return {
 								value: [item[0], item[1], item[2]]
