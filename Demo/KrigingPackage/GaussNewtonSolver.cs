@@ -91,21 +91,28 @@ namespace Demo.KrigingPackage
 
                 //Vector<double> step = jacobian.Transpose().Multiply(jacobian).Cholesky().Solve(jacobian.Transpose().Multiply(residual));//设置步数
                 //我的高斯牛顿法
-                Vector<double> step = (jacobian.Transpose().Multiply(jacobian)).Inverse().Multiply(jacobian.Transpose()).Multiply(residual);//设置步数
-                parametersCurrent.Add(step, parametersNew);//parametersCurrent + step = parametersNew,原来是parameters Current - step = parametersNew
-
-                GetObjectiveValue(model, pointCount, parametersNew, out valueNew);//通过model计算通过parametersNew得到的半方差的和
-
-                iterations.Add(parametersNew);//List<Vector>中加入新的参数值向量
-                Console.WriteLine("c: " + parametersNew[0] + ", a: " + parametersNew[1]);
-                if (ShouldTerminate(valueCurrent, valueNew, iterations.Count, parametersCurrent, parametersNew))
+                try
                 {
-                    //当向量收敛时退出计算。
+                    Vector<double> step = (jacobian.Transpose().Multiply(jacobian)).Cholesky().Solve(-jacobian.Transpose().Multiply(residual));//设置步数
+                    parametersCurrent.Add(step, parametersNew);//parameters Current - step = parametersNew
+
+                    GetObjectiveValue(model, pointCount, parametersNew, out valueNew);//通过model计算通过parametersNew得到的半方差的和
+
+                    iterations.Add(parametersNew);//List<Vector>中加入新的参数值向量
+                                                  //Console.WriteLine("c: " + parametersNew[0] + ", a: " + parametersNew[1]);
+                    if (ShouldTerminate(valueCurrent, valueNew, iterations.Count, parametersCurrent, parametersNew))
+                    {
+                        //当向量收敛时退出计算。
+                        break;
+                    }
+                    //新的向量值等于当前向量
+                    parametersNew.CopyTo(parametersCurrent);
+                    valueCurrent = valueNew;
+                }
+                catch
+                {
                     break;
                 }
-                //新的向量值等于当前向量
-                parametersNew.CopyTo(parametersCurrent);
-                valueCurrent = valueNew;
             }
         }
         //判断是收敛的条件

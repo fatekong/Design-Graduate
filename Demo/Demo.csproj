@@ -152,6 +152,8 @@
     <Compile Include="ISOLinePackage\Tin_Point.cs" />
     <Compile Include="ISOLinePackage\Trace.cs" />
     <Compile Include="ISOLinePackage\Triangle.cs" />
+    <Compile Include="KrigingPackage\GaussModel.cs" />
+    <Compile Include="KrigingPackage\SphericalModel.cs" />
     <Compile Include="MyKDTree\EnumDivisionType.cs" />
     <Compile Include="MyKDTree\KDTree.cs" />
     <Compile Include="MyKDTree\KDTreeNode.cs" />

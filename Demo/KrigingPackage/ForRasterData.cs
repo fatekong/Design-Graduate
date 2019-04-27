@@ -22,7 +22,7 @@ namespace Demo.KrigingPackage
         }
         public int row { private set; get; }//行
         public int column { private set; get; }//列
-
+        private IModel model;
         public void GetParameters(out double c,out double r)
         {
             c = formula_c;
@@ -37,7 +37,7 @@ namespace Demo.KrigingPackage
         private List<AltitudePoint> pointList = new List<AltitudePoint>();//记录散点值
         //插值后的数据
         private double[,] interpolationDEMData;
-        public ForRasterData(List<AltitudePoint> pointList,int row,int colun)
+        /*public ForRasterData(List<AltitudePoint> pointList,int row,int colun)
         {
             this.row = row;
             this.column = column;
@@ -46,9 +46,9 @@ namespace Demo.KrigingPackage
                 this.pointList.Add(new AltitudePoint(p.X, p.Y, p.AltitudeValue));
             }
             GetRegressionPoints();
-        }
+        }*/
 
-        public ForRasterData(List<AltitudePoint> pointList)
+        public ForRasterData(List<AltitudePoint> pointList ,string m)
         {
             this.row = 0;
             this.column = 0;
@@ -56,19 +56,61 @@ namespace Demo.KrigingPackage
             {
                 this.pointList.Add(new AltitudePoint(p.X, p.Y, p.AltitudeValue));
             }
-            GetRegressionPoints();
+            if(m == "指数模型")
+            {
+                model = new ExpModel();
+                Console.WriteLine("指数模型！");
+            }
+            else if(m == "高斯模型")
+            {
+                model = new GaussModel();
+                Console.WriteLine("高斯模型！");
+            }
+            else if (m == "球形模型")
+            {
+                model = new SphericalModel();
+                Console.WriteLine("球形模型！");
+            }
+            GetRegressionPoints(true);
+        }
+        public ForRasterData(List<AltitudePoint> pointList,string m,double c,double r)
+        {
+            this.row = 0;
+            this.column = 0;
+            this.formula_c = c;
+            this.formula_r = r;
+            foreach(AltitudePoint p in pointList)
+            {
+                this.pointList.Add(new AltitudePoint(p.X, p.Y, p.AltitudeValue));
+            }
+            if (m == "指数模型")
+            {
+                model = new ExpModel();
+                Console.WriteLine("指数模型！");
+            }
+            else if (m == "高斯模型")
+            {
+                model = new GaussModel();
+                Console.WriteLine("高斯模型！");
+            }
+            else if(m == "球形模型")
+            {
+                model = new SphericalModel();
+                Console.WriteLine("球形模型！");
+            }
+            GetRegressionPoints(false);
         }
         private double formula_c;
         private double formula_r;
 
-        #region 计算拟合曲线中的a，r   "f(x)=a*(1-e^(-x/r))"
+        #region 计算拟合曲线中的c，r   "f(x)=c*(1-e^(-x/r))"
 
         //求得用于显示的点集
         private List<RegressionPoint> showPoints;
         //求得用于拟合计算的点集
         private List<RegressionPoint> calPoints;
 
-        private void GetRegressionPoints()
+        private void GetRegressionPoints(bool f)
         {
             List<RegressionPoint> initialPoints = new List<RegressionPoint>();
             int length = pointList.Count;
@@ -114,26 +156,30 @@ namespace Demo.KrigingPackage
                 Console.WriteLine(sp.ToString());
             }*/
             //对于showpoint中的点，平均每10个取一个均值
-            for(int n = 0;n< showPoints.Count / 10; n++)
+            //总共取十个点值
+            int average = showPoints.Count / 10;
+            for(int n = 0;n<10; n++)
             {
                 double x = 0;
                 double y = 0;
-                for(int m= n * 10; m < (n + 1) * 10; m++)
+                for(int m= n * average; m < (n + 1) * average; m++)
                 {
                     x += showPoints[m].distance;
                     y += showPoints[m].semivariogram;
                 }
-                calPoints.Add(new RegressionPoint(x / 10, y / 10));
+                calPoints.Add(new RegressionPoint(x / average, y / average));
             }
-
-            FitPoints(calPoints);
+            if (f)
+                FitPoints(calPoints);
+            else
+                GetDrawingInfo();
         }
 
         //高斯牛顿法
         private void FitPoints(List<RegressionPoint> calPoints)
         {
-            IModel model = new ExpModel();
-            GaussNewtonSolver solver = new GaussNewtonSolver(0.001,0.001,1000,new DenseVector(new[] { 50.0,150}));
+            //IModel model = new ExpModel();
+            GaussNewtonSolver solver = new GaussNewtonSolver(0.001,0.001,1000,new DenseVector(new[] { 5.0,150}));
             List<Vector<double>> solverIterations = new List<Vector<double>>();
             double[] x = new double[calPoints.Count];
             double[] y = new double[calPoints.Count];
@@ -149,12 +195,34 @@ namespace Demo.KrigingPackage
 
             solver.Estimate(model, calPoints.Count, dataX, dataY, ref solverIterations);
 
-            Console.WriteLine("fomula_c: " + solverIterations.Last()[0]);
-            Console.WriteLine("fomula_a: " + solverIterations.Last()[1] * 1000);
+            try
+            {
+                Console.WriteLine("fomula_c: " + solverIterations.Last()[0]);
+                Console.WriteLine("fomula_a: " + solverIterations.Last()[1] * 1000);
+            }
+            catch
+            {
+
+            }
             //formula_c = solverIterations.Last()[0];
             //formula_r = solverIterations.Last()[1] * 1000;
-            formula_c = 49.63482;
-            formula_r = 918342.83236;
+            if(model is ExpModel)
+            {
+                formula_c = 15.8420;
+                formula_r = 235306.5;
+            }
+            else if(model is GaussModel)
+            {
+                formula_c = 19.1753;
+                formula_r = 235306.5;
+                Console.WriteLine("this is gaussmodel!");
+            }
+            else if(model is SphericalModel)
+            {
+                formula_c = 16.3119;
+                formula_r = 235306.5;
+                Console.WriteLine("this is sphericalmodel!");
+            }
             GetDrawingInfo();
         }
         #endregion
@@ -181,25 +249,33 @@ namespace Demo.KrigingPackage
             for (int n = 0; n < showPoints.Count; n++)
             {
                 dataForLine[n, 0] = showPoints[n].distance;
-                dataForLine[n, 1] = formula_c * (1 - Math.Exp(-dataForLine[n, 0] / (formula_r)));
+                dataForLine[n, 1] = model.GetValue(dataForLine[n,0],formula_c,formula_r);
+                //dataForLine[n, 1] = formula_c * ((3 * dataForLine[n,0] / 2 * formula_r) - (0.5 * Math.Pow(dataForLine[n,0] / formula_r, 3)));
             }
             var Function = new Semivariogram(formula_c,formula_r, dataForShow, dataForCal, dataForLine);
             Function.Show();
         }
 
         private Matrix<double> Kn;//K的逆矩阵
-
+        //用公式计算半方差
         private double CalCij(double x1,double y1,double x2,double y2)
         {
             Coordinate c1 = new Coordinate(x1, y1);
             Coordinate c2 = new Coordinate(x2, y2);
             double distance = c1.Distance(c2);
-            return formula_c - formula_c * Math.Exp(-distance / formula_r);
+            return model.GetValue(distance, formula_c, formula_r);
+            //return formula_c - formula_c * Math.Exp(-distance / formula_r);
         }
         //测试随机点数据是否满足条件
+        public void ReSetPointList(List<AltitudePoint> points)
+        {
+            pointList = points;
+        }
+
         public Boolean IsPointsOK()
         {
             int size = pointList.Count;
+            //普通克里金法如下：
             var K = new DenseMatrix(size + 1, size + 1);
             for(int m = 0; m < size + 1; m++)
             {
@@ -233,25 +309,66 @@ namespace Demo.KrigingPackage
                 {
                     if (double.IsNaN(Kn[m, n])) return false;
                 }
+
+            //简单克里金法：
+            /*
+            var K = new DenseMatrix(size, size);
+            for (int m = 0; m < size; m++)
+            {
+                    for (int n = m; n < size; n++)
+                    {
+                        if (n == m)
+                        {
+                            K[m, n] = 0;
+                        }
+                        else
+                        {
+                            K[n, m] = K[m, n] = CalCij(pointList[m].X, pointList[m].Y, pointList[n].X, pointList[n].Y);
+                        }
+                    }
+            }
+            Kn = K.Inverse();
+            for (int m = 0; m < size ; m++)
+                for (int n = 0; n < size; n++)
+                {
+                    if (double.IsNaN(Kn[m, n])) return false;
+                }
+
+            */
             return true;
         }
 
         public double GetValue(double x, double y)
         {
             double value = 0;
+            //普通克里金法：
             Vector<double> weight = new DenseVector(pointList.Count + 1);
             Vector<double> D = new DenseVector(pointList.Count + 1);
             for(int i = 0; i < pointList.Count; i++)
-            {
+            { 
                 D[i] = CalCij(x, y, pointList[i].X, pointList[i].Y);
             }
             D[pointList.Count] = 1;
             weight = Kn.Multiply(D);
-            for(int i = 0; i < pointList.Count; i++)
+            for (int i = 0; i < pointList.Count; i++)
             {
                 value += weight[i] * pointList[i].AltitudeValue;
             }
-            return value;
+                //简单克里金法：
+                /*
+                Vector<double> weight = new DenseVector(pointList.Count);
+                Vector<double> D = new DenseVector(pointList.Count);
+                for (int i = 0; i < pointList.Count; i++)
+                {
+                    D[i] = CalCij(x, y, pointList[i].X, pointList[i].Y);
+                }
+                weight = Kn.Multiply(D);
+                for(int i = 0; i < pointList.Count; i++)
+                {
+                    value += weight[i] * pointList[i].AltitudeValue;
+                }*/
+                //Console.WriteLine(x + " , " + y+" : "+value);
+                return value;
         }
     }
 }

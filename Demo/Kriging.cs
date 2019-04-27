@@ -55,6 +55,7 @@ namespace Demo
         private void Kriging_Load(object sender, EventArgs e)
         {
             comboBox3.SelectedIndex = 0;
+            comboBox5.SelectedIndex = 0;
             //List<FeatureSet> fss = map.
             ipl = map.GetPointLayers();
             layername = new List<string>();
@@ -124,40 +125,80 @@ namespace Demo
 
         private void button1_Click(object sender, EventArgs e)
         {
+            bool flag = true;
             if (comboBox1.Text == "")
             {
                 MessageBox.Show("要素信息不能为空", "提示信息", MessageBoxButtons.OKCancel);
+                flag = false;
             }
             else if (comboBox2.Text == "")
             {
                 MessageBox.Show("Z高程值不能为空", "提示信息", MessageBoxButtons.OKCancel);
+                flag = false;
             }
             else if (textBox1.Text == "")
             {
                 MessageBox.Show("像元大小不能为空", "提示信息", MessageBoxButtons.OKCancel);
+                flag = false;
             }
             else if (comboBox4.Text == "")
             {
                 MessageBox.Show("输出栅格文件不能为空", "提示信息", MessageBoxButtons.OKCancel);
+                flag = false;
             }
-            KrigingAlgorithm kriging;
-            if (ifeatureset != null)
+            if(checkBox1.CheckState == CheckState.Checked)
             {
-                kriging = new KrigingAlgorithm(this.progressBar1);
-                int neighborType = 0;
-                if (comboBox3.Text == "固定距离")
+                try
                 {
-                    neighborType = 1;
-                    bool flag = kriging.Execute(ifeatureset, comboBox2.Text, System.Convert.ToDouble(textBox1.Text), comboBox5.Text, neighborType, 0, System.Convert.ToDouble(textBox3.Text), raster);
+                    Convert.ToDouble(textBox2.Text);
+                    Convert.ToDouble(textBox4.Text);
                 }
-               
-                if (kriging.Execute(ifeatureset, comboBox2.Text, System.Convert.ToDouble(textBox1.Text), comboBox5.Text, neighborType, System.Convert.ToInt32(textBox3.Text), 0, raster))
+                catch
                 {
-                    MessageBox.Show("Kriging分析完成", "Kriging提示");
+                    MessageBox.Show("Kriging参数必须为数字", "提示信息", MessageBoxButtons.OKCancel);
+                    flag = false;
+                }
+                if(textBox2.Text == "" || textBox4.Text == "")
+                {
+                    MessageBox.Show("Kriging参数不能为空", "提示信息", MessageBoxButtons.OKCancel);
+                    flag = false;
+                }
+            }
+            if (flag)
+            {
+                KrigingAlgorithm kriging;
+                if (checkBox1.CheckState == CheckState.Checked)
+                {
+                    kriging = new KrigingAlgorithm(this.progressBar1);
+                    int neighborType = 0;
+                    if (kriging.ExecuteByParam(ifeatureset, comboBox2.Text, System.Convert.ToDouble(textBox1.Text), comboBox5.Text, neighborType, System.Convert.ToInt32(textBox3.Text), 0, raster,Convert.ToDouble(textBox2.Text), Convert.ToDouble(textBox4.Text)))
+                    {
+                        MessageBox.Show("Kriging分析完成", "Kriging提示");
+                    }
+                    else
+                        MessageBox.Show("Kriging分析失败", "Kriging提示");
                 }
                 else
-                    MessageBox.Show("Kriging分析失败", "Kriging提示");
+                {
+                    if (ifeatureset != null)
+                    {
+                        kriging = new KrigingAlgorithm(this.progressBar1);
+                        int neighborType = 0;
+                        if (comboBox3.Text == "固定距离")
+                        {
+                            neighborType = 1;
+                            kriging.Execute(ifeatureset, comboBox2.Text, System.Convert.ToDouble(textBox1.Text), comboBox5.Text, neighborType, 0, System.Convert.ToDouble(textBox3.Text), raster);
+                        }
+                        if (kriging.Execute(ifeatureset, comboBox2.Text, System.Convert.ToDouble(textBox1.Text), comboBox5.Text, neighborType, System.Convert.ToInt32(textBox3.Text), 0, raster))
+                        {
+                            MessageBox.Show("Kriging分析完成", "Kriging提示");
+                        }
+                        else
+                            MessageBox.Show("Kriging分析失败", "Kriging提示");
+                    }
+                }
             }
+            
             this.Close();
         }
 
@@ -380,6 +421,40 @@ namespace Demo
                 file = fileDialog.FileName;//返回文件的完整路径                
             }
             return file;
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+            if(textBox2.Text == "")
+            {
+                var bp = new System.Drawing.Bitmap(Demo.Properties.Resources.Caution);
+                pictureBox2.Image = bp;
+            }
+            else
+            {
+                var bp = new System.Drawing.Bitmap(Demo.Properties.Resources.valid);
+                pictureBox2.Image = bp;
+            }
+        }
+
+        private void textBox4_TextChanged(object sender, EventArgs e)
+        {
+            if (textBox4.Text == "")
+            {
+                var bp = new System.Drawing.Bitmap(Demo.Properties.Resources.Caution);
+                pictureBox11.Image = bp;
+            }
+            else
+            {
+                var bp = new System.Drawing.Bitmap(Demo.Properties.Resources.valid);
+                pictureBox11.Image = bp;
+            }
+        }
+
+        private void textBox2_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if ((e.KeyChar <= 48 || e.KeyChar > 57) && (e.KeyChar != 8) && (e.KeyChar != 46))
+                e.Handled = true;
         }
     }
 }
