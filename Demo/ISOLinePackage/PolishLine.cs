@@ -212,7 +212,7 @@ namespace Demo.ISOLinePackage
         //得到阈值
         public void GetThreshold(double original)//此函数必须在edges初始化完成后才能调用
         {
-            double theEpsilon = 0.002;
+            double theEpsilon = trace.EPSILON;
             if (trace.GetEdges().Count == 0)
             {
                 return;
@@ -240,282 +240,6 @@ namespace Demo.ISOLinePackage
                 }
             }
         }
-        /*
-        public List<List<Tin_Point>> TraceModify(List<List<Tin_Point>> tp,double original)//改进算法，避免出现,以18作为例子
-        {
-            //首先要计算临界距离，在这个距离内的点表示与当前等值点几乎重合。
-            List<Tin_Point> p18 = new List<Tin_Point>();
-            List<bool> flag = new List<bool>();//用来记录那几条等值线包含特殊点
-            Tin_Point p1 = null;
-            Tin_Point p2 = null ;
-            Tin_Point p3 = null;
-            Tin_Point p4 = null;
-            List<Tin_Point> sps = new List<Tin_Point>();
-            int l1, l2;
-            l1 = l2 = -1;//两条等值线的序号
-            sps = trace.GetSpecialPoint(original);//value = 18
-            foreach (var points in sps)
-            {
-                for (int i = 0; i < tp.Count; i++)
-                {
-                    flag.Add(false);
-                    foreach(var p in tp[i])
-                    {
-                        double distance = Math.Sqrt((p.X - points.X) * (p.X - points.X) + (p.Y - points.Y) * (p.Y - points.Y));
-                        if(distance <= threshold)
-                        {
-                            p18.Add(p);
-                            flag[i] = true;
-                            break;
-                        }
-                    }
-                    if (flag[i] == false)
-                        p18.Add(null);
-                }
-                for(int i = 0;i<flag.Count;i++)
-                {
-                    if(flag[i] == true)
-                    {
-                        for(int j = 0; j < tp[i].Count; j++)
-                        {
-                            if (tp[i][j].Equals(p18[i]))
-                            {
-                                if(p1 == null&& p3 == null)
-                                {
-                                    p1 = tp[i][j - 1];
-                                    p3 = tp[i][j + 1];
-                                    l1 = i;
-                                }
-                                else
-                                {
-                                    p2 = tp[i][j - 1];
-                                    p4 = tp[i][j + 1];
-                                    l2 = i;
-                                }
-                                break;
-                            }
-                        }
-                    }
-                }
-                if(l1!=-1&& l2 != -1)//得到tp中的两条等值线
-                {
-                    List<Tin_Point> newline1, newline2;//共同构建出两条新的等值线
-                    newline1 = new List<Tin_Point>();
-                    newline2 = new List<Tin_Point>();
-                    bool sign = false;
-                    if ((GetDistance(p1,p2) + GetDistance(p3, p4)) < (GetDistance(p1, p4) + GetDistance(p2, p3)))//12 34分别为两组
-                    {
-                        if (GetDistance(p1, p2) < GetDistance(p3, p4))
-                        {
-                            for(int k = tp[l1].Count - 1; k >= 0; k--)
-                            {
-                                if (tp[l1][k].Equals(p3))
-                                {
-                                    newline1.Add(p3);
-                                    newline1.Add(points);
-                                    break;
-                                }
-                                newline1.Add(tp[l1][k]);
-                            }
-                            for(int k = 0; k < tp[l2].Count; k++)
-                            {
-                                if (sign)
-                                {
-                                    newline1.Add(tp[l2][k]);
-                                }
-                                if (tp[l2][k].Equals(p4))
-                                {
-                                    newline1.Add(p4);
-                                    sign = true;
-                                }
-                            }
-                            sign = false;
-                            for (int k = 0; k < tp[l1].Count; k++)
-                            {
-                                if (tp[l1][k].Equals(p1))
-                                {
-                                    newline2.Add(p1);
-                                    break;
-                                }
-                                newline2.Add(tp[l1][k]);
-                            }
-                            for(int k = tp[l2].Count - 1; k >= 0; k--)
-                            {
-                                if (sign)
-                                {
-                                    newline2.Add(tp[l2][k]);
-                                }
-                                if (tp[l2][k].Equals(p2))
-                                {
-                                    newline2.Add(p2);
-                                    sign = true;
-                                }
-                            }
-                            sign = false;
-                        }
-                        else
-                        {
-                            for (int k = 0; k <tp[l1].Count; k++)
-                            {
-                                if (tp[l1][k].Equals(p1))
-                                {
-                                    newline1.Add(p1);
-                                    newline1.Add(points);
-                                    break;
-                                }
-                                newline1.Add(tp[l1][k]);
-                            }
-                            for (int k = tp[l2].Count-1; k >=0; k--)
-                            {
-                                if (sign)
-                                {
-                                    newline1.Add(tp[l2][k]);
-                                }
-                                if (tp[l2][k].Equals(p2))
-                                {
-                                    newline1.Add(p2);
-                                    sign = true;
-                                }
-                            }
-                            sign = false;
-                            for (int k = tp[l1].Count - 1; k >= 0; k--)
-                            {
-                                if (tp[l1][k].Equals(p3))
-                                {
-                                    newline2.Add(p3);
-                                    break;
-                                }
-                                newline2.Add(tp[l1][k]);
-                            }
-                            for (int k = 0; k < tp[l2].Count; k++)
-                            {
-                                if (sign)
-                                {
-                                    newline2.Add(tp[l2][k]);
-                                }
-                                if (tp[l2][k].Equals(p4))
-                                {
-                                    newline2.Add(p4);
-                                    sign = true;
-                                }
-                            }
-                            sign = false;
-                        }
-                    }
-                    else//14 23分别为两组
-                    {
-                        if (GetDistance(p1, p4) < GetDistance(p3, p2))//p3后，p3，p18，p2，p2前（p1前，p1，p4，p4后）
-                        {
-                            for(int k = 0; k < tp[l2].Count; k++)//newl1，p2前 p2 p18
-                            {
-                                if (tp[l2][k].Equals(p2))
-                                {
-                                    newline1.Add(p2);
-                                    newline1.Add(points);
-                                    break;
-                                }
-                                newline1.Add(tp[l2][k]);
-                            }
-                            for(int k = 0; k < tp[l1].Count; k++)//newl1，p3 p3后
-                            {
-                                if(sign == true)
-                                {
-                                    newline1.Add(tp[l1][k]);
-                                }
-                                if (tp[l1][k].Equals(p3))
-                                {
-                                    newline1.Add(p3);
-                                    sign = true;
-                                }
-                            }
-                            sign = false;
-                            for(int k = 0; k < tp[l1].Count; k++)//newl2，p1前，p1
-                            {
-                                if (tp[l1][k].Equals(p1))
-                                {
-                                    newline2.Add(p1);
-                                    break;
-                                }
-                                newline2.Add(tp[l2][k]);
-                            }
-                            for(int k = 0; k < tp[l2].Count; k++)//newl2，p4，p4后
-                            {
-                                if (sign)
-                                {
-                                    newline2.Add(tp[l2][k]);
-                                }
-                                if (tp[l2][k].Equals(p4))
-                                {
-                                    newline2.Add(p4);
-                                    sign = true;
-                                }
-                            }
-                            sign = false;
-                        }
-                        else//p1前，p1，p18，p4，p4后（p3后，p3，p2，p2前）
-                        {
-                            for (int k = 0; k < tp[l1].Count; k++)//newl1加入p1，p18以及之前
-                            {
-                                if (tp[l1][k].Equals(p1))
-                                {
-                                    newline1.Add(p1);
-                                    newline1.Add(points);
-                                    break;
-                                }
-                                newline1.Add(tp[l1][k]);
-                            }
-                            for (int k = 0; k < tp[l2].Count; k++)//newl1加入p4以及之后
-                            {
-                                if (sign == true)
-                                {
-                                    newline1.Add(tp[l2][k]);
-                                }
-                                if (tp[l2][k].Equals(p4))
-                                {
-                                    newline1.Add(p4);
-                                    sign = true;
-                                }
-                            }
-                            sign = false;
-                            for (int k = 0; k < tp[l2].Count; k++)//newl2加入p2以及之前
-                            {
-                                if (tp[l2][k].Equals(p2))
-                                {
-                                    newline2.Add(p2);
-                                    break;
-                                }
-                                newline2.Add(tp[l2][k]);
-                            }
-                            for (int k = 0; k < tp[l1].Count; k++)//newl2加入p3以及之后
-                            {
-                                if (sign)
-                                {
-                                    newline2.Add(tp[l1][k]);
-                                }
-                                if (tp[l1][k].Equals(p3))
-                                {
-                                    newline2.Add(p3);
-                                    sign = true;
-                                }
-                            }
-                            sign = false;
-                        }
-                    }
-                    //将newl1和newl2加入等值线
-                    tp.Add(newline1);
-                    tp.Add(newline2);
-                    tp.RemoveAt(l1);
-                    l2--;
-                    tp.RemoveAt(l2);
-                    
-                }
-
-
-
-            }
-            return tp;
-        }
-        */
         //一条等值线上两个点距离因为某等值点的原因太近可以进行移除
         public List<Tin_Point> RemoveInvalid(List<Tin_Point> lines, Tin_Point point)
         {
@@ -579,8 +303,9 @@ namespace Demo.ISOLinePackage
             return lines;
         }
         //
-        public List<List<Tin_Point>> TraceModify(List<List<Tin_Point>> tp, double original)//改进算法，避免出现,以18作为例子
+        public List<List<Tin_Point>> TraceModify(List<List<Tin_Point>> tp, double original)//等值线改进算法
         {
+            Console.WriteLine("改进值为： " + original);
             threshold = trace.GetThreshold(original);
             Console.WriteLine("阈值的大小为：" + threshold);
             //首先要计算临界距离，在这个距离内的点表示与当前等值点几乎重合。
@@ -592,16 +317,25 @@ namespace Demo.ISOLinePackage
             Tin_Point p4 = null;
             List<Tin_Point> sps = new List<Tin_Point>();
             int l1, l2;
+            int type1, type2;//需要处理的两条等值线的类型，-1为开放，-2为闭合，如果都是闭合则最后只生成一条等值线，如果都是开放则生成两条等值线，如果一条开放一条闭合则生成一条开放等值线
             l1 = l2 = -1;//两条等值线的序号
+            type1 = type2 = 0;
             sps = trace.GetSpecialPoint(original);//value = 18
             foreach (var points in sps)
             {
                 p18.Clear();
                 flag.Clear();
+                tp = SetLinesType(tp);
+                foreach (var tpline in tp)
+                {
+                    Console.WriteLine(tpline[0].Type);
+                }
                 for (int i = 0; i < tp.Count; i++)
                 {
                     flag.Add(false);
-                    tp[i] = RemoveInvalid(tp[i], points);//移除距离太近的且靠近等值点的点
+                    if (tp[i][0].Type == -1)
+                        tp[i] = RemoveInvalid(tp[i], points);//移除距离太近的且靠近等值点的点
+                    //tp[i] = RemoveInvalid(tp[i], points);//移除距离太近的且靠近等值点的点
                     foreach (var p in tp[i])
                     {
                         double distance = Math.Sqrt((p.X - points.X) * (p.X - points.X) + (p.Y - points.Y) * (p.Y - points.Y));
@@ -625,249 +359,485 @@ namespace Demo.ISOLinePackage
                             {
                                 if (p1 == null && p3 == null)
                                 {
-                                    if (j - 1 < 0 || j + 1 == tp[i].Count)
+                                    type1 = tp[i][0].Type;
+                                    if (type1 == -1)
                                     {
-                                        break;
+                                        if (j - 1 < 0 || j + 1 == tp[i].Count)
+                                            break;
+                                        else
+                                        {
+                                            p1 = tp[i][j - 1];
+                                            p3 = tp[i][j + 1];
+                                            l1 = i;
+                                        }
                                     }
-                                    p1 = tp[i][j - 1];
-                                    p3 = tp[i][j + 1];
-                                    l1 = i;
+                                    else
+                                    {
+                                        if (j - 1 < 0)
+                                        {
+                                            p1 = tp[i][tp[i].Count - 2];
+                                            p3 = tp[i][1];
+                                            l1 = i;
+                                        }
+                                        if (j + 1 == tp[i].Count)
+                                        {
+                                            p1 = tp[i][j - 1];
+                                            p3 = tp[i][1];
+                                            l1 = i;
+                                        }
+                                        else
+                                        {
+                                            p1 = tp[i][j - 1];
+                                            p3 = tp[i][j + 1];
+                                            l1 = i;
+                                        }
+                                    }
                                 }
                                 else
                                 {
-                                    p2 = tp[i][j - 1];
-                                    p4 = tp[i][j + 1];
-                                    l2 = i;
+                                    type2 = tp[i][0].Type;
+                                    if (type2 == -1)
+                                    {
+                                        if (j - 1 < 0 || j + 1 == tp[i].Count)
+                                        {
+                                            break;
+                                        }
+                                        else
+                                        {
+                                            p2 = tp[i][j - 1];
+                                            p4 = tp[i][j + 1];
+                                            l2 = i;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (j - 1 < 0)
+                                        {
+                                            p2 = tp[i][tp[i].Count - 2];
+                                            p4 = tp[i][1];
+                                            l2 = i;
+                                        }
+                                        if (j + 1 == tp[i].Count)
+                                        {
+                                            p2 = tp[i][j - 1];
+                                            p4 = tp[i][1];
+                                            l2 = i;
+                                        }
+                                        else if (j - 1 > 0 && j + 1 != tp[i].Count)
+                                        {
+                                            p2 = tp[i][j - 1];
+                                            p4 = tp[i][j + 1];
+                                            l2 = i;
+                                        }
+                                    }
                                 }
                                 break;
                             }
                         }
                     }
                 }
+                Console.WriteLine("L1: " + l1 + ", L2: " + l2);
                 if (l1 != -1 && l2 != -1)//得到tp中的两条等值线
                 {
-                    List<Tin_Point> newline1, newline2;//共同构建出两条新的等值线
-                    newline1 = new List<Tin_Point>();
-                    newline2 = new List<Tin_Point>();
-                    bool sign = false;
-                    if ((GetDistance(p1, p2) + GetDistance(p3, p4)) < (GetDistance(p1, p4) + GetDistance(p2, p3)))//12 34分别为两组
+                    Console.WriteLine("得到两条等值线，进行合并操作");
+                    if (type1 == -1 && type2 == -1)
                     {
-                        Console.WriteLine("12 34 < 14 23");
-                        if (GetDistance(p1, p2) < GetDistance(p3, p4))
+                        Console.WriteLine("两条等值线均为开放形！");
+                        List<Tin_Point> newline1, newline2;//共同构建出两条新的等值线
+                        newline1 = new List<Tin_Point>();
+                        newline2 = new List<Tin_Point>();
+                        bool sign = false;
+                        if ((GetDistance(p1, p2) + GetDistance(p3, p4)) < (GetDistance(p1, p4) + GetDistance(p2, p3)))//12 34分别为两组
                         {
-                            Console.WriteLine("12 < 43");
-                            for (int k = tp[l1].Count - 1; k >= 0; k--)
+                            Console.WriteLine("12 34 < 14 23");
+                            if (GetDistance(p1, p2) < GetDistance(p3, p4))
                             {
-                                if (tp[l1][k].Equals(p3))
+                                Console.WriteLine("12 < 43");
+                                for (int k = tp[l1].Count - 1; k >= 0; k--)
                                 {
-                                    newline1.Add(p3);
-                                    newline1.Add(points);
-                                    break;
+                                    if (tp[l1][k].Equals(p3))
+                                    {
+                                        newline1.Add(p3);
+                                        newline1.Add(points);
+                                        break;
+                                    }
+                                    newline1.Add(tp[l1][k]);
                                 }
-                                newline1.Add(tp[l1][k]);
-                            }
-                            for (int k = 0; k < tp[l2].Count; k++)
-                            {
-                                if (sign)
+                                for (int k = 0; k < tp[l2].Count; k++)
                                 {
+                                    if (sign)
+                                    {
+                                        newline1.Add(tp[l2][k]);
+                                    }
+                                    if (tp[l2][k].Equals(p4))
+                                    {
+                                        newline1.Add(p4);
+                                        sign = true;
+                                    }
+                                }
+                                sign = false;
+                                for (int k = 0; k < tp[l1].Count; k++)
+                                {
+                                    if (tp[l1][k].Equals(p1))
+                                    {
+                                        newline2.Add(p1);
+                                        break;
+                                    }
+                                    newline2.Add(tp[l1][k]);
+                                }
+                                for (int k = tp[l2].Count - 1; k >= 0; k--)
+                                {
+                                    if (sign)
+                                    {
+                                        newline2.Add(tp[l2][k]);
+                                    }
+                                    if (tp[l2][k].Equals(p2))
+                                    {
+                                        newline2.Add(p2);
+                                        sign = true;
+                                    }
+                                }
+                                sign = false;
+                            }
+                            else
+                            {
+                                Console.WriteLine("12 > 43");
+                                for (int k = 0; k < tp[l1].Count; k++)
+                                {
+                                    if (tp[l1][k].Equals(p1))
+                                    {
+                                        newline1.Add(p1);
+                                        newline1.Add(points);
+                                        break;
+                                    }
+                                    newline1.Add(tp[l1][k]);
+                                }
+                                for (int k = tp[l2].Count - 1; k >= 0; k--)
+                                {
+                                    if (sign)
+                                    {
+                                        newline1.Add(tp[l2][k]);
+                                    }
+                                    if (tp[l2][k].Equals(p2))
+                                    {
+                                        newline1.Add(p2);
+                                        sign = true;
+                                    }
+                                }
+                                sign = false;
+                                for (int k = tp[l1].Count - 1; k >= 0; k--)
+                                {
+                                    if (tp[l1][k].Equals(p3))
+                                    {
+                                        newline2.Add(p3);
+                                        break;
+                                    }
+                                    newline2.Add(tp[l1][k]);
+                                }
+                                for (int k = 0; k < tp[l2].Count; k++)
+                                {
+                                    if (sign)
+                                    {
+                                        newline2.Add(tp[l2][k]);
+                                    }
+                                    if (tp[l2][k].Equals(p4))
+                                    {
+                                        newline2.Add(p4);
+                                        sign = true;
+                                    }
+                                }
+                                sign = false;
+                            }
+                        }
+                        else//14 23分别为两组
+                        {
+                            Console.WriteLine("14 23 < 12 24");
+                            if (GetDistance(p1, p4) < GetDistance(p3, p2))//p3后，p3，p18，p2，p2前（p1前，p1，p4，p4后）
+                            {
+                                Console.WriteLine("14 < 32");
+                                for (int k = 0; k < tp[l2].Count; k++)//newl1，p2前 p2 p18
+                                {
+                                    if (tp[l2][k].Equals(p2))
+                                    {
+                                        newline1.Add(p2);
+                                        Console.WriteLine("P2: " + p2.ToString());
+                                        newline1.Add(points);
+                                        break;
+                                    }
                                     newline1.Add(tp[l2][k]);
                                 }
-                                if (tp[l2][k].Equals(p4))
+                                for (int k = 0; k < tp[l1].Count; k++)//newl1，p3 p3后
                                 {
-                                    newline1.Add(p4);
-                                    sign = true;
+                                    if (sign == true)
+                                    {
+                                        newline1.Add(tp[l1][k]);
+                                    }
+                                    if (tp[l1][k].Equals(p3))
+                                    {
+                                        Console.WriteLine("P3: " + p3.ToString());
+                                        newline1.Add(p3);
+                                        sign = true;
+                                    }
                                 }
-                            }
-                            sign = false;
-                            for (int k = 0; k < tp[l1].Count; k++)
-                            {
-                                if (tp[l1][k].Equals(p1))
+                                sign = false;
+                                for (int k = 0; k < tp[l1].Count; k++)//newl2，p1前，p1
                                 {
-                                    newline2.Add(p1);
-                                    break;
+                                    if (tp[l1][k].Equals(p1))
+                                    {
+                                        newline2.Add(p1);
+                                        break;
+                                    }
+                                    newline2.Add(tp[l1][k]);
                                 }
-                                newline2.Add(tp[l1][k]);
-                            }
-                            for (int k = tp[l2].Count - 1; k >= 0; k--)
-                            {
-                                if (sign)
+                                for (int k = 0; k < tp[l2].Count; k++)//newl2，p4，p4后
                                 {
+                                    if (sign)
+                                    {
+                                        newline2.Add(tp[l2][k]);
+                                    }
+                                    if (tp[l2][k].Equals(p4))
+                                    {
+                                        newline2.Add(p4);
+                                        sign = true;
+                                    }
+                                }
+                                sign = false;
+                            }
+                            else//p1前，p1，p18，p4，p4后（p3后，p3，p2，p2前）
+                            {
+                                Console.WriteLine("23 < 14");
+                                for (int k = 0; k < tp[l1].Count; k++)//newl1加入p1，p18以及之前
+                                {
+                                    if (tp[l1][k].Equals(p1))
+                                    {
+                                        newline1.Add(p1);
+                                        newline1.Add(points);
+                                        break;
+                                    }
+                                    newline1.Add(tp[l1][k]);
+                                }
+                                for (int k = 0; k < tp[l2].Count; k++)//newl1加入p4以及之后
+                                {
+                                    if (sign == true)
+                                    {
+                                        newline1.Add(tp[l2][k]);
+                                    }
+                                    if (tp[l2][k].Equals(p4))
+                                    {
+                                        newline1.Add(p4);
+                                        sign = true;
+                                    }
+                                }
+                                sign = false;
+                                for (int k = 0; k < tp[l2].Count; k++)//newl2加入p2以及之前
+                                {
+                                    if (tp[l2][k].Equals(p2))
+                                    {
+                                        newline2.Add(p2);
+                                        //newline2.Add(points);
+                                        break;
+                                    }
                                     newline2.Add(tp[l2][k]);
                                 }
-                                if (tp[l2][k].Equals(p2))
+                                for (int k = 0; k < tp[l1].Count; k++)//newl2加入p3以及之后
                                 {
-                                    newline2.Add(p2);
-                                    sign = true;
+                                    if (sign)
+                                    {
+                                        newline2.Add(tp[l1][k]);
+                                    }
+                                    if (tp[l1][k].Equals(p3))
+                                    {
+                                        newline2.Add(p3);
+                                        sign = true;
+                                    }
+                                }
+                                sign = false;
+                            }
+                        }
+                        //将newl1和newl2加入等值线
+                        tp.Add(newline1);
+                        tp.Add(newline2);
+                        tp.RemoveAt(l1);
+                        l2--;
+                        tp.RemoveAt(l2);
+                    }
+                    else if (type1 == -1 || type2 == -1)
+                    {
+                        Console.WriteLine("其中一条等值线均为开放形！");
+                        List<Tin_Point> newline = new List<Tin_Point>();
+                        bool sign = false;
+                        bool special = false;
+                        if ((GetDistance(p1, p2) + GetDistance(p3, p4)) < (GetDistance(p1, p4) + GetDistance(p2, p3)))//12 34分别为两组
+                        {
+                            if (type1 == -1)
+                            {
+                                for (int k = 0; k < tp[l1].Count; k++)
+                                {
+                                    newline.Add(tp[l1][k]);
+                                    if (tp[l1][k] == p1)
+                                        break;
+                                }
+                                newline.Add(points);
+                                if (tp[l2][tp[l2].Count - 1] == p2)
+                                    special = true;
+                                for (int k = tp[l2].Count - 1; k >= 0; k--)
+                                {
+                                    if (tp[l2][k] == p2)
+                                        sign = true;
+                                    if (sign)
+                                        newline.Add(tp[l2][k]);
+                                    if (k == 0 && special)
+                                    {
+                                        k = tp[l2].Count - 1;
+                                    }
+                                    if (special && tp[l2][k] == p4)
+                                        break;
+                                }
+                                sign = false;
+                                for (int k = 0; k < tp[l1].Count; k++)
+                                {
+                                    if (tp[l1][k] == p3)
+                                        sign = true;
+                                    if (sign)
+                                        newline.Add(tp[l1][k]);
+
                                 }
                             }
-                            sign = false;
+                            else
+                            {
+                                for (int k = 0; k < tp[l2].Count; k++)
+                                {
+                                    newline.Add(tp[l2][k]);
+                                    if (tp[l2][k] == p2)
+                                        break;
+                                }
+                                newline.Add(points);
+                                if (tp[l1][tp[l1].Count - 1] == p1)
+                                    special = true;
+                                for (int k = tp[l1].Count - 1; k >= 0; k--)
+                                {
+                                    if (tp[l1][k] == p1)
+                                        sign = true;
+                                    if (sign)
+                                        newline.Add(tp[l1][k]);
+                                    if (k == 0 && special)
+                                    {
+                                        k = tp[l1].Count - 1;
+                                    }
+                                    if (special && tp[l1][k] == p3)
+                                        break;
+                                }
+                                sign = false;
+                                for (int k = 0; k < tp[l2].Count; k++)
+                                {
+                                    if (tp[l2][k] == p4)
+                                        sign = true;
+                                    if (sign)
+                                        newline.Add(tp[l2][k]);
+
+                                }
+                            }
                         }
                         else
                         {
-                            Console.WriteLine("12 > 43");
-                            for (int k = 0; k < tp[l1].Count; k++)
-                            {
-                                if (tp[l1][k].Equals(p1))
-                                {
-                                    newline1.Add(p1);
-                                    newline1.Add(points);
-                                    break;
-                                }
-                                newline1.Add(tp[l1][k]);
-                            }
-                            for (int k = tp[l2].Count - 1; k >= 0; k--)
-                            {
-                                if (sign)
-                                {
-                                    newline1.Add(tp[l2][k]);
-                                }
-                                if (tp[l2][k].Equals(p2))
-                                {
-                                    newline1.Add(p2);
-                                    sign = true;
-                                }
-                            }
                             sign = false;
-                            for (int k = tp[l1].Count - 1; k >= 0; k--)
+                            special = false;
+                            if (type1 == -1)
                             {
-                                if (tp[l1][k].Equals(p3))
+                                for (int k = 0; k < tp[l1].Count; k++)
                                 {
-                                    newline2.Add(p3);
-                                    break;
+                                    newline.Add(tp[l1][k]);
+                                    if (tp[l1][k] == p1)
+                                        break;
                                 }
-                                newline2.Add(tp[l1][k]);
+                                newline.Add(points);
+                                if (p4 == tp[l2][1])
+                                    special = true;
+                                for (int k = 0; k < tp[l2].Count; k++)
+                                {
+                                    if (tp[l2][k] == p4)
+                                        sign = true;
+                                    if (sign)
+                                        newline.Add(tp[l2][k]);
+                                    if (special && k == tp[l2].Count - 1)
+                                    {
+                                        k = 0;
+                                    }
+                                    if (special && tp[l2][k] == p2)
+                                        break;
+                                }
+                                sign = false;
+                                for (int k = 0; k < tp[l1].Count; k++)
+                                {
+                                    if (tp[l1][k] == p3)
+                                        sign = true;
+                                    if (sign)
+                                        newline.Add(tp[l1][k]);
+                                }
                             }
-                            for (int k = 0; k < tp[l2].Count; k++)
+                            else
                             {
-                                if (sign)
+                                for (int k = 0; k < tp[l2].Count; k++)
                                 {
-                                    newline2.Add(tp[l2][k]);
+                                    newline.Add(tp[l2][k]);
+                                    if (tp[l2][k] == p2)
+                                        break;
                                 }
-                                if (tp[l2][k].Equals(p4))
+                                newline.Add(points);
+                                if (p3 == tp[l2][1])
+                                    special = true;
+                                for (int k = 0; k < tp[l1].Count; k++)
                                 {
-                                    newline2.Add(p4);
-                                    sign = true;
+                                    if (tp[l1][k] == p3)
+                                        sign = true;
+                                    if (sign)
+                                        newline.Add(tp[l1][k]);
+                                    if (special && k == tp[l1].Count - 1)
+                                    {
+                                        k = 0;
+                                    }
+                                    if (special && tp[l1][k] == p1)
+                                        break;
+                                }
+                                sign = false;
+                                for (int k = 0; k < tp[l2].Count; k++)
+                                {
+                                    if (tp[l2][k] == p4)
+                                        sign = true;
+                                    if (sign)
+                                        newline.Add(tp[l2][k]);
                                 }
                             }
-                            sign = false;
                         }
+                        tp.Add(newline);
+                        tp.RemoveAt(l1);
+                        l2--;
+                        tp.RemoveAt(l2);
                     }
-                    else//14 23分别为两组
+                    else
                     {
-                        Console.WriteLine("14 23 < 12 24");
-                        if (GetDistance(p1, p4) < GetDistance(p3, p2))//p3后，p3，p18，p2，p2前（p1前，p1，p4，p4后）
+                        List<Tin_Point> newline = new List<Tin_Point>();
+                        if ((GetDistance(p1, p2) + GetDistance(p3, p4)) < (GetDistance(p1, p4) + GetDistance(p2, p3)))//12 34分别为两组
                         {
-                            Console.WriteLine("14 < 32");
-                            for (int k = 0; k < tp[l2].Count; k++)//newl1，p2前 p2 p18
-                            {
-                                if (tp[l2][k].Equals(p2))
-                                {
-                                    newline1.Add(p2);
-                                    Console.WriteLine("P2: " + p2.ToString());
-                                    newline1.Add(points);
-                                    break;
-                                }
-                                newline1.Add(tp[l2][k]);
-                            }
-                            for (int k = 0; k < tp[l1].Count; k++)//newl1，p3 p3后
-                            {
-                                if (sign == true)
-                                {
-                                    newline1.Add(tp[l1][k]);
-                                }
-                                if (tp[l1][k].Equals(p3))
-                                {
-                                    Console.WriteLine("P3: " + p3.ToString());
-                                    newline1.Add(p3);
-                                    sign = true;
-                                }
-                            }
-                            sign = false;
-                            for (int k = 0; k < tp[l1].Count; k++)//newl2，p1前，p1
-                            {
-                                if (tp[l1][k].Equals(p1))
-                                {
-                                    newline2.Add(p1);
-                                    break;
-                                }
-                                newline2.Add(tp[l1][k]);
-                            }
-                            for (int k = 0; k < tp[l2].Count; k++)//newl2，p4，p4后
-                            {
-                                if (sign)
-                                {
-                                    newline2.Add(tp[l2][k]);
-                                }
-                                if (tp[l2][k].Equals(p4))
-                                {
-                                    newline2.Add(p4);
-                                    sign = true;
-                                }
-                            }
-                            sign = false;
+
                         }
-                        else//p1前，p1，p18，p4，p4后（p3后，p3，p2，p2前）
+                        else
                         {
-                            Console.WriteLine("23 < 14");
-                            for (int k = 0; k < tp[l1].Count; k++)//newl1加入p1，p18以及之前
-                            {
-                                if (tp[l1][k].Equals(p1))
-                                {
-                                    newline1.Add(p1);
-                                    newline1.Add(points);
-                                    break;
-                                }
-                                newline1.Add(tp[l1][k]);
-                            }
-                            for (int k = 0; k < tp[l2].Count; k++)//newl1加入p4以及之后
-                            {
-                                if (sign == true)
-                                {
-                                    newline1.Add(tp[l2][k]);
-                                }
-                                if (tp[l2][k].Equals(p4))
-                                {
-                                    newline1.Add(p4);
-                                    sign = true;
-                                }
-                            }
-                            sign = false;
-                            for (int k = 0; k < tp[l2].Count; k++)//newl2加入p2以及之前
-                            {
-                                if (tp[l2][k].Equals(p2))
-                                {
-                                    newline2.Add(p2);
-                                    //newline2.Add(points);
-                                    break;
-                                }
-                                newline2.Add(tp[l2][k]);
-                            }
-                            for (int k = 0; k < tp[l1].Count; k++)//newl2加入p3以及之后
-                            {
-                                if (sign)
-                                {
-                                    newline2.Add(tp[l1][k]);
-                                }
-                                if (tp[l1][k].Equals(p3))
-                                {
-                                    newline2.Add(p3);
-                                    sign = true;
-                                }
-                            }
-                            sign = false;
+
                         }
                     }
-                    //将newl1和newl2加入等值线
-                    tp.Add(newline1);
-                    tp.Add(newline2);
-                    tp.RemoveAt(l1);
-                    l2--;
-                    tp.RemoveAt(l2);
                 }
                 p1 = p2 = p3 = p4 = null;
                 l1 = l2 = -1;
+                type1 = type2 = 0;
             }
-
+            foreach(var tpline in tp)
+            {
+                foreach(var linepoint in tpline)
+                {
+                    linepoint.Value -= trace.EPSILON;
+                }
+            }
             return tp;
         }
         //
@@ -877,7 +847,11 @@ namespace Demo.ISOLinePackage
             List<List<Tin_Point>> tp = new List<List<Tin_Point>>();
             Console.WriteLine("进入ClassifyLine！");
             //Console.WriteLine("Value & Count: " + lines[0].Value + " & " +lines.Count);
-
+            double polish_value = 0;
+            if (IsSpetialPoint)
+            {
+                polish_value = lines[0].Value - trace.EPSILON;
+            }
             for (int i = 0; i <= lines[lines.Count - 1].Type; i++)
             {
                 tp.Add(new List<Tin_Point>());
@@ -1018,7 +992,7 @@ namespace Demo.ISOLinePackage
             }*/
             if (IsSpetialPoint)
             {
-                tp = TraceModify(tp, 18);
+                tp = TraceModify(tp, polish_value);
             }
             //tp = TraceModify(tp, 18);
             return SetLinesType(tp);

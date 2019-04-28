@@ -12,8 +12,8 @@ namespace Demo.ISOLinePackage
         private int layers = 2;//等值线的分层等级
         private double valuemax = 0;//所有值中最大值
         private double valuemin = 0;//最小值
-        private double EPSILON = 0;//一个极小的正数，根据最小值而定
-        private double MyEPSILON = 0.002;//用在值上
+        public double EPSILON = 0;//一个极小的正数，根据最小值而定
+        //private double MyEPSILON = 0.002;//用在值上
         private List<Tin_Point> tpoint = new List<Tin_Point>();
         //如果等值点与TIN中的等值点相同，则得到阈值范围
         public List<Edges> GetEdges()
@@ -156,7 +156,7 @@ namespace Demo.ISOLinePackage
                     }
                 }
             }
-            EPSILON = Math.Abs(this.valuemin / 1048576.0);
+            EPSILON = Math.Abs((this.valuemax - this.valuemin)/1000);
         }
         public bool ContainPoint(Tin_Point t1, Tin_Point t2, double value)//边上是否包括等值点
         {
@@ -553,7 +553,7 @@ namespace Demo.ISOLinePackage
             this.tpoint = tin_Points;
             List<double> linevalue = new List<double>();//每个等值线的值
             this.Extremum(tin_Points);//得到最值
-            Console.WriteLine("最大值：" + this.valuemax + ",最小值：" + this.valuemin + ",Epsilon：" + this.MyEPSILON);
+            Console.WriteLine("最大值：" + this.valuemax + ",最小值：" + this.valuemin + ",Epsilon：" + this.EPSILON);
             this.TriangleForEdges(triangles);//更新边
             Console.WriteLine("边已更新完毕");
             //for(int i = 1; i < this.layers; i++)
@@ -581,7 +581,7 @@ namespace Demo.ISOLinePackage
                 {
                     if (p.Value == thevalue)
                     {
-                        thevalue += this.MyEPSILON;
+                        thevalue += this.EPSILON;
                         break;
                     }
                 }
